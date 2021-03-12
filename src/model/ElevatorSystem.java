@@ -1,8 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ElevatorSystem {
 
@@ -25,20 +23,55 @@ public class ElevatorSystem {
         }
     }
 
-    private Optional<Elevator> chooseElevatorToPick() { // TODO: improve method
-        for (Elevator elevator: elevators) {
-            if (elevator.getState() == ElevatorState.WAITING) {
-                return Optional.of(elevator);
-            }
+    private Elevator chooseElevatorToPick(int floor, Direction direction) {
+
+        Optional<Elevator> firstTry = elevators.stream()
+                .filter(elevator -> (elevator.getCurrentFloor() == floor))
+                .findFirst();
+
+        if (firstTry.isPresent()) {
+            return firstTry.get();
         }
-        return Optional.empty();
+
+        Optional<Elevator> secondTry;
+        if (direction == Direction.DOWN) {
+            secondTry = elevators.stream()
+                    .filter(elevator -> (elevator.getState() == ElevatorState.ACTIVE))
+                    .filter(elevator -> (elevator.getCurrentFloor() > floor))
+                    .filter(elevator -> (elevator.getDestinationFloor() <= floor))
+                    .findFirst();
+        }
+
+        else {
+            secondTry = elevators.stream()
+                    .filter(elevator -> (elevator.getState() == ElevatorState.ACTIVE))
+                    .filter(elevator -> (elevator.getCurrentFloor() < floor))
+                    .filter(elevator -> (elevator.getDestinationFloor() >= floor))
+                    .findFirst();
+        }
+
+        if (secondTry.isPresent()) {
+            return secondTry.get();
+        }
+
+        Optional<Elevator> thirdTry = elevators.stream()
+                .filter(elevator -> (elevator.getState() == ElevatorState.WAITING))
+                .min(Comparator.comparingInt(elevator -> Math.abs(elevator.getCurrentFloor() - floor)));
+
+        if (thirdTry.isPresent()) {
+            return thirdTry.get();
+        }
+
+        Random random = new Random();
+        int randomElevatorID = random.nextInt(floorsNumber + 1);
+        return elevators.get(randomElevatorID);
     }
 
 
     public void pickup(int floor, Direction direction) { // TODO: add direction usage
         if (floor >= 0 && floor <= floorsNumber) { // TODO: message if wrong parameters
-            Optional<Elevator> availableElevator = chooseElevatorToPick();
-            availableElevator.ifPresent(elevator -> elevator.setDestinationFloorAndActivate(floor));
+            Elevator chosenElevator = chooseElevatorToPick(floor, direction);
+            chosenElevator.setDestinationFloorAndActivate(floor);
         }
     }
 

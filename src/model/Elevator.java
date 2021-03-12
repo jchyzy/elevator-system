@@ -1,37 +1,46 @@
 package model;
 
+import java.util.*;
+
 public class Elevator {
 
     private final int id;
     private int currentFloor;
-    private int destinationFloor;
+    private TreeSet<Integer> destinationFloors;
     private ElevatorState state;
 
     public Elevator(int id) {
         this.id = id;
         state = ElevatorState.WAITING;
+        destinationFloors = new TreeSet<>();
     }
 
     public void setDestinationFloorAndActivate(int destinationFloor) {
-
-        if (state != ElevatorState.ACTIVE) { // if ACTIVE do nothing
-            state = ElevatorState.ACTIVE;
-            this.destinationFloor = destinationFloor;
-        }
+        state = ElevatorState.ACTIVE;
+        destinationFloors.add(destinationFloor);
     }
 
     public void performStep() {
-        if (state == ElevatorState.ACTIVE) {
-            if (currentFloor < destinationFloor) {
-                currentFloor += 1;
-            } else if (currentFloor > destinationFloor) {
-                currentFloor -= 1;
-            }
+        if (state == ElevatorState.WAITING || destinationFloors.isEmpty()) {
+            return;
+        }
 
-            if (currentFloor == destinationFloor){
+        int destinationFloor = getDestinationFloor();
+
+        if (currentFloor < destinationFloor) {
+            currentFloor += 1;
+        } else if (currentFloor > destinationFloor) {
+            currentFloor -= 1;
+        }
+
+        if (currentFloor == destinationFloor){
+            destinationFloors.remove(currentFloor);
+
+            if (destinationFloors.isEmpty()) {
                 state = ElevatorState.WAITING;
             }
         }
+
     }
 
     @Override
@@ -39,7 +48,7 @@ public class Elevator {
         return "Elevator{" +
                 "id=" + id +
                 ", currentFloor=" + currentFloor +
-                ", destinationFloor=" + destinationFloor +
+                ", destinationFloors=" + Arrays.toString(destinationFloors.toArray()) +
                 ", state=" + state +
                 '}';
     }
@@ -61,7 +70,7 @@ public class Elevator {
     }
 
     public int getDestinationFloor() {
-        return destinationFloor;
+        return destinationFloors.first(); // may be null?
     }
 
 }
