@@ -33,7 +33,7 @@ public class Elevator {
             currentFloor -= 1;
         }
 
-        if (currentFloor == destinationFloor){
+        if (currentFloor == destinationFloor) {
             destinationFloors.remove(currentFloor);
 
             if (destinationFloors.isEmpty()) {
@@ -50,12 +50,12 @@ public class Elevator {
 
     @Override
     public String toString() {
-        return "Elevator{" +
+        return "Elevator {" +
                 "id=" + id +
                 ", currentFloor=" + currentFloor +
                 ", destinationFloors=" + Arrays.toString(destinationFloors.toArray()) +
                 ", state=" + state +
-                '}';
+                " }";
     }
 
     public ElevatorState getState() {
@@ -75,7 +75,10 @@ public class Elevator {
     }
 
     public int getDestinationFloor() {
-        return destinationFloors.first(); // may be null?
+        if (destinationFloors.isEmpty()) {
+            return currentFloor;
+        }
+        return destinationFloors.first();
     }
 
 }

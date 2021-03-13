@@ -16,7 +16,7 @@ public class AppControler {
     private ElevatorSystem system;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping("/")
+    @GetMapping(value = "/")
     public String index() {
         return "index";
     }

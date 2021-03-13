@@ -30,7 +30,7 @@ public class ConsoleApplication {
 
         try {
             System.out.print("Number of elevators: ");
-            String elevatorsNumberString = scanner.nextLine();
+            String elevatorsNumberString = scanner.nextLine().trim();
             elevatorsNumber = Integer.parseInt(elevatorsNumberString);
             if (elevatorsNumber <= 0 || elevatorsNumber > 16) {
                 System.out.println("Wrong parameter.");
@@ -38,7 +38,7 @@ public class ConsoleApplication {
             }
 
             System.out.print("Number of floors: ");
-            String floorsNumberString = scanner.nextLine();
+            String floorsNumberString = scanner.nextLine().trim();
 
             floorsNumber = Integer.parseInt(floorsNumberString);
             if (floorsNumber <= 0 || floorsNumber > MAX_NUMBER_OF_FLOORS) {
@@ -63,7 +63,7 @@ public class ConsoleApplication {
             if (line.equals("")) {
                 continue;
             }
-            boolean executionSucceed = parser.executeCommandFromLine(line);
+            boolean executionSucceed = parser.executeCommandFromLine(line.trim());
 
             if (!executionSucceed) {
                 System.out.println("Cannot parse command. Type 'help' to see available commands.");
