@@ -6,16 +6,21 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     </head>
     <body>
-        <div>
-            <h1>Please enter configuration for Elevator System</h1>
+        <div class="container-fluid p-4">
+            <h1>Configuration for Elevator System</h1>
             <form>
-                <label for="elevators">Elevators number</label>
-                <input type="number" id="elevators" name="elevators" min="1" max="16" required>
+                <div class="form-group p-2">
+                    <label for="elevators">Elevators number: </label>
+                    <input type="number" id="elevators" name="elevators" min="1" max="16" required>
+                </div>
+                <div class="form-group p-2">
+                    <label for="floors">Floors number: </label>
+                    <input type="number" id="floors" name="floors" min="1" max="100" required>
+                </div>
 
-                <label for="floors">Floors number</label>
-                <input type="number" id="floors" name="floors" min="1" max="100" required>
-
-                <input type="submit" value="Confirm" formaction="/system" formmethod="post">
+                <div class="form-group p-2">
+                    <input class="btn btn-primary" type="submit" value="Confirm" formaction="/system" formmethod="post">
+                </div>
             </form>
         </div>
     </body>

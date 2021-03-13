@@ -74,6 +74,6 @@ public class AppControler {
     private void addAttributesToModel(Model model) {
         model.addAttribute("elevators", system.getElevators());
         model.addAttribute("elevatorsNumber", system.getElevatorsNumber());
-        model.addAttribute("elevators", system.getElevators());
+        model.addAttribute("floorsNumber", system.getFloorsNumber());
     }
 }

@@ -8,11 +8,18 @@
     <body>
         <div>
             <div class="container-fluid row">
+                <center>
+                    <h1>Elevator system</h1>
+                    <div>
+                        Elevators number: <span th:text="${elevatorsNumber}"></span><br>
+                        Floors number: <span th:text="${floorsNumber}"></span><br>
+                    </div>
+                </center>
                 <div class="container col p-4">
-                    <center><h1>Control</h1></center>
+                    <center><h2>Control</h2></center>
                     <form class="row form-group p-2 border rounded" name="pickup">
                         <div class="col">
-                            <label for="floor">Floor</label>
+                            <label for="floor">Floor: </label>
                             <input class="w-25" type="number" id="floor" name="floor" min="0" th:max=${floorsNumber} required>
                         </div>
                         <div class="col">
@@ -26,11 +33,11 @@
 
                     <form class="row form-group p-2 border rounded" name="update">
                         <div class="col">
-                            <label for="elevator">Elevator ID</label>
-                            <input class="w-25" type="number" id="elevator" name="elevator" min="0" th:max=${elevatorsNumber} required>
+                            <label for="elevator">Elevator ID: </label>
+                            <input class="w-25" type="number" id="elevator" name="elevator" min="0" th:max=${elevatorsNumber-1} required>
                         </div>
                         <div class="col">
-                            <label for="destination">Destination floor</label>
+                            <label for="destination">Destination floor: </label>
                             <input class="w-25" type="number" id="destination" name="destination" min="0" th:max=${floorsNumber} required>
                         </div>
                         <input class="col btn btn-outline-primary" type="submit" value="Update" formaction="/system" formmethod="post">
@@ -38,14 +45,14 @@
 
                     <form class="row form-group p-2 border rounded" name="step">
                         <div class="col">
-                            <label for="steps">Steps number</label>
+                            <label for="steps">Steps number: </label>
                             <input class="w-25" type="number" id="steps" name="steps" value="1" min="1" max="1000" required>
                         </div>
                         <input class="col btn btn-outline-secondary" type="submit" value="Step" formaction="/system" formmethod="post">
                     </form>
                 </div>
                 <div class="container col p-4">
-                    <center><h1>Status</h1></center>
+                    <center><h2>Status</h2></center>
                     <ul class="list-group">
                         <li th:each="elevator: ${elevators}" class="list-group-item">
                             <div th:text="${elevator}"></div>
