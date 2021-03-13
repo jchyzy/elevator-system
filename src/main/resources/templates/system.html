@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Elavator System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+    <body>
+        <div>
+            <div class="container-fluid row">
+                <div class="container col p-4">
+                    <center><h1>Control</h1></center>
+                    <form class="row form-group p-2 border rounded" name="pickup">
+                        <div class="col">
+                            <label for="floor">Floor</label>
+                            <input class="w-25" type="number" id="floor" name="floor" min="0" th:max=${floorsNumber} required>
+                        </div>
+                        <div class="col">
+                            <label for="up">Up</label>
+                            <input type="radio" id="up" name="direction" value="up" required>
+                            <label for="down">Down</label>
+                            <input type="radio" id="down" name="direction" value="down" required>
+                        </div>
+                        <input class="col btn btn-outline-primary" type="submit" value="Pickup" formaction="/system" formmethod="post">
+                    </form>
+
+                    <form class="row form-group p-2 border rounded" name="update">
+                        <div class="col">
+                            <label for="elevator">Elevator ID</label>
+                            <input class="w-25" type="number" id="elevator" name="elevator" min="0" th:max=${elevatorsNumber} required>
+                        </div>
+                        <div class="col">
+                            <label for="destination">Destination floor</label>
+                            <input class="w-25" type="number" id="destination" name="destination" min="0" th:max=${floorsNumber} required>
+                        </div>
+                        <input class="col btn btn-outline-primary" type="submit" value="Update" formaction="/system" formmethod="post">
+                    </form>
+
+                    <form class="row form-group p-2 border rounded" name="step">
+                        <div class="col">
+                            <label for="steps">Steps number</label>
+                            <input class="w-25" type="number" id="steps" name="steps" value="1" min="1" max="1000" required>
+                        </div>
+                        <input class="col btn btn-outline-secondary" type="submit" value="Step" formaction="/system" formmethod="post">
+                    </form>
+                </div>
+                <div class="container col p-4">
+                    <center><h1>Status</h1></center>
+                    <ul class="list-group">
+                        <li th:each="elevator: ${elevators}" class="list-group-item">
+                            <div th:text="${elevator}"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

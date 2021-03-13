@@ -87,4 +87,22 @@ public class ElevatorSystem {
     public void status() {
         elevators.forEach(System.out::println);
     }
+
+    public void step(int steps) {
+        elevators.forEach(elevator -> elevator.performStep(steps));
+        //elevators.forEach(Elevator::performStep);
+    }
+
+    public List<Elevator> getElevators() {
+        return elevators;
+    }
+
+    public int getElevatorsNumber() {
+        return elevatorsNumber;
+    }
+
+    public int getFloorsNumber() {
+        return floorsNumber;
+    }
+
 }

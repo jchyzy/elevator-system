@@ -40,7 +40,12 @@ public class Elevator {
                 state = ElevatorState.WAITING;
             }
         }
+    }
 
+    public void performStep(int steps) {
+        for (int i = 0; i < steps; i++) {
+            performStep();
+        }
     }
 
     @Override
