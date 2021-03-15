@@ -10,6 +10,10 @@ public class ElevatorSystem {
     private List<Elevator> elevators;
     private final ElevatorPicker elevatorPicker;
 
+    public static final int MAX_NUMBER_OF_FLOORS = 100;
+    public static final int MAX_NUMBER_OF_ELEVATORS = 16;
+
+
     public ElevatorSystem(int elevatorsNumber, int floorsNumber) {
         this.elevatorsNumber = elevatorsNumber;
         this.floorsNumber = floorsNumber;
@@ -25,16 +29,26 @@ public class ElevatorSystem {
         }
     }
 
-    public void pickup(int floor, Direction direction) { // TODO: add direction usage
-        if (floor >= 0 && floor <= floorsNumber) { // TODO: message if wrong parameters
-            Elevator chosenElevator = elevatorPicker.chooseElevatorToPick(floor, direction);
-            chosenElevator.setDestinationFloorAndActivate(floor);
+    public boolean pickup(int floor, Direction direction) {
+        if (floor >= 0 && floor <= floorsNumber) {
+            if ((floor == 0 && direction == Direction.DOWN) || (floor == floorsNumber && direction == Direction.UP)) {
+                return false;
+            }
+
+            Optional<Elevator> chosenElevator = elevatorPicker.chooseElevatorToPick(floor, direction);
+            chosenElevator.ifPresent(elevator -> elevator.setDestinationFloorAndActivatePickup(floor));
+            return true;
         }
+        return false;
     }
 
-    public void update(int elevatorId, int destinationFloor) { // current floor cannot be updated
-        Elevator elevator = elevators.get(elevatorId);
-        elevator.setDestinationFloorAndActivate(destinationFloor);
+    public boolean update(int elevatorId, int destinationFloor) { // current floor cannot be updated
+        if (elevators.contains(elevatorId) && destinationFloor >= 0 && destinationFloor <= floorsNumber) {
+            Elevator elevator = elevators.get(elevatorId);
+            elevator.setDestinationFloorAndActivateUpdate(destinationFloor);
+            return true;
+        }
+        return false;
     }
 
     public void step() {

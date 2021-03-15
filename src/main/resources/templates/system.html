@@ -20,7 +20,7 @@
                     <form class="row form-group p-2 border rounded" name="pickup">
                         <div class="col">
                             <label for="floor">Floor: </label>
-                            <input class="w-25" type="number" id="floor" name="floor" min="0" th:max=${floorsNumber} required autofocus>
+                            <input class="w-25" type="number" id="floor" name="floor" min="0" th:max=${floorsNumber} required autofocus onchange="disableRadio()">
                         </div>
                         <div class="col">
                             <label for="up">Up</label>
@@ -61,5 +61,13 @@
                 </div>
             </div>
         </div>
+        <script>
+        function disableRadio() {
+            var inputFloor = document.getElementById("floor").value;
+            document.getElementById("down").disabled = inputFloor == 0 ? true : false;
+            document.getElementById("up").disabled = inputFloor == [[${floorsNumber}]] ? true : false;
+        }
+    </script>
     </body>
+
 </html>

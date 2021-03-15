@@ -5,9 +5,11 @@ import model.ElevatorSystem;
 
 public class CommandParser {
 
+    private ConsoleApplication consoleApplication;
     private final ElevatorSystem system;
 
-    public CommandParser(ElevatorSystem system) {
+    public CommandParser(ConsoleApplication consoleApplication, ElevatorSystem system) {
+        this.consoleApplication = consoleApplication;
         this.system = system;
     }
 
@@ -36,15 +38,13 @@ public class CommandParser {
             String direction = commandElements[2];
 
             switch (direction) {
-                case "up" -> system.pickup(floor, Direction.UP);
-                case "down" -> system.pickup(floor, Direction.DOWN);
+                case "up" -> { return system.pickup(floor, Direction.UP); }
+                case "down" -> { return system.pickup(floor, Direction.DOWN); }
                 default -> { return false; }
             }
         } catch (NumberFormatException e) {
             return false;
         }
-
-        return true;
     }
 
     private boolean updateCommand(String[] commandElements) {
@@ -55,20 +55,27 @@ public class CommandParser {
             int elevatorId = Integer.parseInt(commandElements[1]);
             int destinationFloor = Integer.parseInt(commandElements[2]);
 
-            system.update(elevatorId, destinationFloor);
+            return system.update(elevatorId, destinationFloor);
         } catch (NumberFormatException e) {
             return false;
         }
-        return true;
     }
 
     private boolean stepCommand(String[] commandElements) {
-        if (commandElements.length != 1) {
+        if (commandElements.length == 1) {
+            system.step();
+            return true;
+        } else if (commandElements.length == 2) {
+            try {
+                int steps = Integer.parseInt(commandElements[1]);
+                system.step(steps);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else {
             return false;
         }
-
-        system.step();
-        return true;
     }
 
     private boolean statusCommand(String[] commandElements) {
@@ -85,7 +92,7 @@ public class CommandParser {
             return false;
         }
 
-        System.out.println("Help"); // TODO: Help message
+        consoleApplication.showHelpMessage();
         return true;
     }
 

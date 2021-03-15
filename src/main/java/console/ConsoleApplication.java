@@ -1,6 +1,7 @@
 package console;
 
 import model.ElevatorSystem;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.Scanner;
 
@@ -9,19 +10,21 @@ public class ConsoleApplication {
     private ElevatorSystem system;
     private CommandParser parser;
 
-    private static final int MAX_NUMBER_OF_FLOORS = 100;
-
     public static void main(String[] args) {
 
         ConsoleApplication application = new ConsoleApplication();
-
         Scanner scanner = new Scanner(System.in);
-        while (!application.askForConfig(scanner)) {
+
+        application.showInitMessage();
+        application.askForConfigUntilCorrect(scanner);
+        application.showHelpMessage();
+        application.startApplicationLoop(scanner);
+    }
+
+    public void askForConfigUntilCorrect(Scanner scanner) {
+        while (!askForConfig(scanner)) {
             System.out.println("Please enter correct configuration");
         }
-
-        // TODO: Add help message
-        application.startApplicationLoop(scanner);
     }
 
     public boolean askForConfig(Scanner scanner) {
@@ -32,16 +35,15 @@ public class ConsoleApplication {
             System.out.print("Number of elevators: ");
             String elevatorsNumberString = scanner.nextLine().trim();
             elevatorsNumber = Integer.parseInt(elevatorsNumberString);
-            if (elevatorsNumber <= 0 || elevatorsNumber > 16) {
+            if (elevatorsNumber <= 0 || elevatorsNumber > ElevatorSystem.MAX_NUMBER_OF_ELEVATORS) {
                 System.out.println("Wrong parameter.");
                 return false;
             }
 
             System.out.print("Number of floors: ");
             String floorsNumberString = scanner.nextLine().trim();
-
             floorsNumber = Integer.parseInt(floorsNumberString);
-            if (floorsNumber <= 0 || floorsNumber > MAX_NUMBER_OF_FLOORS) {
+            if (floorsNumber <= 0 || floorsNumber > ElevatorSystem.MAX_NUMBER_OF_FLOORS) {
                 System.out.println("Wrong parameter.");
                 return false;
             }
@@ -51,7 +53,7 @@ public class ConsoleApplication {
         }
 
         system = new ElevatorSystem(elevatorsNumber, floorsNumber);
-        parser = new CommandParser(system);
+        parser = new CommandParser(this, system);
 
         return true;
     }
@@ -63,11 +65,32 @@ public class ConsoleApplication {
             if (line.equals("")) {
                 continue;
             }
-            boolean executionSucceed = parser.executeCommandFromLine(line.trim());
+            boolean executionSucceeded = parser.executeCommandFromLine(line.trim());
 
-            if (!executionSucceed) {
-                System.out.println("Cannot parse command. Type 'help' to see available commands.");
+            if (!executionSucceeded) {
+                System.out.println("Wrong command or parameters. Type 'help' to see available commands.");
             }
         }
+    }
+
+    public void showInitMessage() {
+        String initMessage = "Welcome to Elevator System! " +
+                "Please enter desired configuration";
+
+        System.out.println(initMessage);
+    }
+
+    public void showHelpMessage() {
+        String helpMessage = StringUtils.repeat("-", 40) + "\n" +
+                "ELEVATOR SYSTEM - available commands:\n" +
+                "* pickup <floor> <direction>\n" +
+                "* update <elevatorId> <destinationFloor>\n" +
+                "* step [<stepsNumber>]\n" +
+                "* status\n" +
+                "* help\n" +
+                "* exit\n" +
+                StringUtils.repeat("-", 40);
+
+        System.out.println(helpMessage);
     }
 }
