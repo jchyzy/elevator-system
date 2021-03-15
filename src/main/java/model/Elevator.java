@@ -7,12 +7,14 @@ public class Elevator {
     private final int id;
     private int currentFloor;
     private ElevatorState state;
-    private LinkedHashSet<Integer> destinationsPickup = new LinkedHashSet<>();
-    private LinkedHashSet<Integer> destinationsUpdate = new LinkedHashSet<>();
+    private LinkedHashSet<Integer> destinationsPickup;
+    private LinkedHashSet<Integer> destinationsUpdate;
 
     public Elevator(int id) {
         this.id = id;
         state = ElevatorState.WAITING;
+        destinationsPickup = new LinkedHashSet<>();
+        destinationsUpdate = new LinkedHashSet<>();
     }
 
     public void setDestinationFloorAndActivatePickup(int destinationFloor) {
@@ -68,16 +70,8 @@ public class Elevator {
         return state;
     }
 
-    public void setState(ElevatorState state) {
-        this.state = state;
-    }
-
     public int getCurrentFloor() {
         return currentFloor;
-    }
-
-    public void setCurrentFloor(int currentFloor) {
-        this.currentFloor = currentFloor;
     }
 
     public int getDestinationFloor() {
@@ -88,10 +82,6 @@ public class Elevator {
         } else {
             return currentFloor;
         }
-    }
-
-    public boolean destinationFloorAlreadyToPickup(int floor) {
-        return destinationsPickup.contains(floor);
     }
 
     public int numberOfDestinationFloors() {

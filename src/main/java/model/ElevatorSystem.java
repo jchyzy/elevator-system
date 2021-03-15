@@ -18,7 +18,7 @@ public class ElevatorSystem {
         this.elevatorsNumber = elevatorsNumber;
         this.floorsNumber = floorsNumber;
         createElevators();
-        elevatorPicker = new ElevatorPicker(elevators, floorsNumber);
+        elevatorPicker = new ElevatorPicker(elevators);
     }
 
     private void createElevators() {
@@ -43,7 +43,8 @@ public class ElevatorSystem {
     }
 
     public boolean update(int elevatorId, int destinationFloor) { // current floor cannot be updated
-        if (elevators.contains(elevatorId) && destinationFloor >= 0 && destinationFloor <= floorsNumber) {
+        if ((elevatorId >= 0) && (elevatorId < elevators.size())
+                && (destinationFloor >= 0) && (destinationFloor <= floorsNumber)) {
             Elevator elevator = elevators.get(elevatorId);
             elevator.setDestinationFloorAndActivateUpdate(destinationFloor);
             return true;

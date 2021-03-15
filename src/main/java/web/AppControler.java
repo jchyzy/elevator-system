@@ -62,9 +62,9 @@ public class AppControler {
     }
 
     @PostMapping(value = "/system", params = {"steps"})
-    public String systemSteps(Model model,
+    public String systemStep(Model model,
                               @RequestParam(value = "steps") int steps) {
-        logger.info("Steps command executed. Steps: " + steps);
+        logger.info("Step command executed. Steps: " + steps);
 
         system.step(steps);
         addAttributesToModel(model);

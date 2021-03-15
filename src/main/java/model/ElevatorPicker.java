@@ -3,17 +3,14 @@ package model;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.function.Predicate;
 
 public class ElevatorPicker {
 
     private List<Elevator> elevators;
-    private int floorsNumber;
 
-    public ElevatorPicker(List<Elevator> elevators, int floorsNumber) {
+    public ElevatorPicker(List<Elevator> elevators) {
         this.elevators = elevators;
-        this.floorsNumber = floorsNumber;
     }
 
     public Optional<Elevator> chooseElevatorToPick(int floor, Direction direction) {
@@ -47,18 +44,6 @@ public class ElevatorPicker {
                     .filter(elevator -> (elevator.getDestinationFloor() >= floor))
                     .findFirst();
         }
-    }
-
-    private Optional<Elevator> chooseElevatorThirdTry(int floor, Direction direction) {
-        return elevators.stream()
-                .filter(elevator -> (elevator.getState() == ElevatorState.WAITING))
-                .min(Comparator.comparingInt(elevator -> Math.abs(elevator.getCurrentFloor() - floor)));
-    }
-
-    private Elevator getRandomElevator() {
-        Random random = new Random();
-        int randomElevatorID = random.nextInt(floorsNumber + 1);
-        return elevators.get(randomElevatorID);
     }
 
     private Optional<Elevator> chooseElevatorLeastBusy() {

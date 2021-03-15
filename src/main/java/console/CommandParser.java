@@ -5,7 +5,7 @@ import model.ElevatorSystem;
 
 public class CommandParser {
 
-    private ConsoleApplication consoleApplication;
+    private final ConsoleApplication consoleApplication;
     private final ElevatorSystem system;
 
     public CommandParser(ConsoleApplication consoleApplication, ElevatorSystem system) {

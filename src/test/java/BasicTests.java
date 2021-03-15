@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicTests {
 
-    private int elevatorsNumber = 5;
-    private int floorsNumber = 10;
-    private int[] floorsToTest = {1, 3, 5, 7, 10};
+    private final int elevatorsNumber = 5;
+    private final int floorsNumber = 10;
+    private final int[] floorsToTest = {1, 3, 5, 7, 10};
     private ElevatorSystem system;
 
     @BeforeEach
