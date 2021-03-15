@@ -6,22 +6,27 @@ public class Elevator {
 
     private final int id;
     private int currentFloor;
-    private TreeSet<Integer> destinationFloors;
     private ElevatorState state;
+    private LinkedHashSet<Integer> destinationsPickup = new LinkedHashSet<>();
+    private LinkedHashSet<Integer> destinationsUpdate = new LinkedHashSet<>();
 
     public Elevator(int id) {
         this.id = id;
         state = ElevatorState.WAITING;
-        destinationFloors = new TreeSet<>();
     }
 
-    public void setDestinationFloorAndActivate(int destinationFloor) {
+    public void setDestinationFloorAndActivatePickup(int destinationFloor) {
         state = ElevatorState.ACTIVE;
-        destinationFloors.add(destinationFloor);
+        destinationsPickup.add(destinationFloor);
+    }
+
+    public void setDestinationFloorAndActivateUpdate(int destinationFloor) {
+        state = ElevatorState.ACTIVE;
+        destinationsUpdate.add(destinationFloor);
     }
 
     public void performStep() {
-        if (state == ElevatorState.WAITING || destinationFloors.isEmpty()) {
+        if (state == ElevatorState.WAITING || (destinationsUpdate.isEmpty() && destinationsPickup.isEmpty())) {
             return;
         }
 
@@ -34,9 +39,10 @@ public class Elevator {
         }
 
         if (currentFloor == destinationFloor) {
-            destinationFloors.remove(currentFloor);
+            destinationsUpdate.remove(currentFloor);
+            destinationsPickup.remove(currentFloor);
 
-            if (destinationFloors.isEmpty()) {
+            if (destinationsUpdate.isEmpty() && destinationsPickup.isEmpty()) {
                 state = ElevatorState.WAITING;
             }
         }
@@ -53,7 +59,7 @@ public class Elevator {
         return "Elevator {" +
                 "id=" + id +
                 ", currentFloor=" + currentFloor +
-                ", destinationFloors=" + Arrays.toString(destinationFloors.toArray()) +
+                ", destinationFloors: update=" + Arrays.toString(destinationsUpdate.toArray()) + " pickup=" + Arrays.toString(destinationsPickup.toArray()) +
                 ", state=" + state +
                 " }";
     }
@@ -75,10 +81,21 @@ public class Elevator {
     }
 
     public int getDestinationFloor() {
-        if (destinationFloors.isEmpty()) {
+        if (!destinationsUpdate.isEmpty()) {
+            return destinationsUpdate.iterator().next();
+        } else if (!destinationsPickup.isEmpty()) {
+            return destinationsPickup.iterator().next();
+        } else {
             return currentFloor;
         }
-        return destinationFloors.first();
+    }
+
+    public boolean destinationFloorAlreadyToPickup(int floor) {
+        return destinationsPickup.contains(floor);
+    }
+
+    public int numberOfDestinationFloors() {
+        return destinationsUpdate.size() + destinationsPickup.size();
     }
 
 }

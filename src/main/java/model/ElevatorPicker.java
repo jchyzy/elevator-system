@@ -16,24 +16,24 @@ public class ElevatorPicker {
         this.floorsNumber = floorsNumber;
     }
 
-    public Elevator chooseElevatorToPick(int floor, Direction direction) {
-        return chooseElevatorFirstTry(floor)
-                .or(() -> chooseElevatorSecondTry(floor, direction))
-                .or(() -> chooseElevatorThirdTry(floor, direction))
-                .orElseGet(this::getRandomElevator);
+    public Optional<Elevator> chooseElevatorToPick(int floor, Direction direction) {
+        if (elevatorThatRequiresNoActionExist(floor)) {
+            return Optional.empty();
+        }
+        return chooseElevatorPickingOnTheWay(floor, direction)
+                .or(this::chooseElevatorLeastBusy);
     }
 
-    private Optional<Elevator> chooseElevatorFirstTry(int floor) {
+    private boolean elevatorThatRequiresNoActionExist(int floor) {
         Predicate<Elevator> elevatorOnDesiredFloor = elevator -> (elevator.getCurrentFloor() == floor);
         Predicate<Elevator> elevatorMovingToDesiredFloor =
                 elevator -> (elevator.getState() == ElevatorState.ACTIVE && elevator.getDestinationFloor() == floor);
 
         return elevators.stream()
-                .filter(elevatorOnDesiredFloor.or(elevatorMovingToDesiredFloor))
-                .findFirst();
+                .anyMatch(elevatorOnDesiredFloor.or(elevatorMovingToDesiredFloor));
     }
 
-    private Optional<Elevator> chooseElevatorSecondTry(int floor, Direction direction) {
+    private Optional<Elevator> chooseElevatorPickingOnTheWay(int floor, Direction direction) {
         if (direction == Direction.DOWN) {
             return elevators.stream()
                     .filter(elevator -> (elevator.getState() == ElevatorState.ACTIVE))
@@ -59,5 +59,10 @@ public class ElevatorPicker {
         Random random = new Random();
         int randomElevatorID = random.nextInt(floorsNumber + 1);
         return elevators.get(randomElevatorID);
+    }
+
+    private Optional<Elevator> chooseElevatorLeastBusy() {
+        return elevators.stream()
+                .min(Comparator.comparingInt(Elevator::numberOfDestinationFloors));
     }
 }
